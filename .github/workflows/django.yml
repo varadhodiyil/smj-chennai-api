@@ -27,4 +27,4 @@ jobs:
         pipenv install --deploy
     - name: Run Tests
       run: |
-        python manage.py test
+        cd smj_chennai && python manage.py test
