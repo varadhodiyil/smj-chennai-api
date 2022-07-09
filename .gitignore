@@ -127,3 +127,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+smj_chennai/smj_chennai/db.conf
