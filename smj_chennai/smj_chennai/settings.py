@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "smj_chennai.core",
     "corsheaders",
+    "smj_chennai.user",
 ]
 
 MIDDLEWARE = [

@@ -1,9 +1,9 @@
+from rest_framework import status
 from rest_framework.generics import GenericAPIView, ListAPIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from smj_chennai.core.models import Charges, Documents
 from smj_chennai.core.serializers import ChargesSerializer, DocumentsSerializer
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 
 
 class DocumentsAPI(ListAPIView):
@@ -33,6 +33,7 @@ class DocumentsAPI(ListAPIView):
 
 class ChargesAPI(ListAPIView):
     serializer_class = ChargesSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         queryset = Charges.objects.order_by("-created_at").all()
