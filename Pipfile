@@ -11,3 +11,4 @@ drf-yasg = {extras = ["validation"], version = "==1.20.0"}
 
 [dev-packages]
 pytest = "*"
+black = "*"
