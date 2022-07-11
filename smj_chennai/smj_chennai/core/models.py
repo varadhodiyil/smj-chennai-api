@@ -43,17 +43,19 @@ class Charges(models.Model):
     document = models.OneToOneField("Documents", models.DO_NOTHING)
     lr_date = models.DateField()
     dispatch_expense = models.FloatField()
-    dispatch_paid_on = models.DateTimeField(blank=True, null=True)
+    dispatch_paid_on = models.DateField(blank=True, null=True)
     door_delivery_expense = models.FloatField()
     door_delivery_paid_on = models.DateField(blank=True, null=True)
     pay_method = models.CharField(max_length=50)
     any_other_expense = models.FloatField(blank=True, null=True)
-    any_other_expense_paid_on = models.DateTimeField(blank=True, null=True)
+    any_other_expense_paid_on = models.DateField(blank=True, null=True)
     any_other_expense_pay_method = models.CharField(
         max_length=50, blank=True, null=True
     )
     party = models.ForeignKey("Party", models.DO_NOTHING, db_column="party")
-    created_at = models.DateTimeField()
+    total = models.DecimalField(max_digits=10, decimal_places=0)
+    paid = models.DecimalField(max_digits=10, decimal_places=0)
+    created_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
