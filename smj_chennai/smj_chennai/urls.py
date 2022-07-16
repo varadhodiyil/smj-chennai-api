@@ -47,4 +47,5 @@ urlpatterns = [
     ),
     path("", include("smj_chennai.core.urls")),
     path("profile/", include("smj_chennai.user.urls")),
+    path("dashboard/", include("smj_chennai.dashboard.urls")),
 ]

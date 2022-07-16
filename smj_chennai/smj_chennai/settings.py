@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "smj_chennai.core",
     "corsheaders",
     "smj_chennai.user",
+    "smj_chennai.dashboard",
 ]
 
 MIDDLEWARE = [
