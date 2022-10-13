@@ -7,4 +7,6 @@ urlpatterns = [
     path("charges/", views.ChargesAPI.as_view()),
     path("charges/<int:id>/", views.ChargesUpdateAPI.as_view()),
     path("party/", views.PartyAPI.as_view()),
+    path("bills/", views.BillsAPI.as_view()),
+    path("bills/<int:id>/", views.BillsUpdateAPI.as_view()),
 ]

@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+
+
 class Documents(models.Model):
     docket_date = models.DateTimeField()
     docket_number = models.IntegerField()
@@ -26,7 +28,6 @@ class Documents(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        managed = False
         db_table = "documents"
 
 
@@ -35,7 +36,6 @@ class Party(models.Model):
     created_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = "party"
 
 
@@ -58,5 +58,21 @@ class Charges(models.Model):
     created_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = "charges"
+
+
+class Bills(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    bill_number = models.IntegerField(unique=True)
+    party = models.ForeignKey("Party", models.DO_NOTHING, db_column="party")
+    bill_amount = models.FloatField()
+    payment_mode = models.CharField(max_length=10)
+    payment_received_at = models.DateField(db_index=True)
+    payment_received = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    remarks = models.CharField(max_length=500)
+
+    class Meta:
+        db_table = "bills"

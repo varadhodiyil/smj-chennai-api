@@ -2,7 +2,7 @@ from datetime import datetime
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from smj_chennai.dashboard.serializers import AnalyticsSerializer, DateRangeSerializer
-from smj_chennai.core.models import Documents
+from smj_chennai.core.models import Bills, Documents
 
 
 class PartyBalanceApi(GenericAPIView):
@@ -11,26 +11,26 @@ class PartyBalanceApi(GenericAPIView):
     def get(self, request, *args, **kwargs):
         """get's party balance for the current month"""
         sql = """
-                    SELECT 
+                   SELECT 
                     0 as id,
             (c.paid - t.unpaid) AS `value`, 
             p.name AS `key` 
             FROM 
             (
                 SELECT 
-                SUM(total) as unpaid, 
+                SUM(`bill_amount`) as unpaid, 
                 party 
                 from 
-                documents 
+                bills 
                 GROUP BY 
                 party
             ) t 
             INNER JOIN (
                 SELECT 
-                SUM(total) as paid, 
+                SUM(`payment_received`) as paid, 
                 party 
                 from 
-                charges 
+                bills 
                 GROUP BY 
                 party
             ) c on c.party = t.party 
@@ -54,22 +54,19 @@ class SummaryApi(GenericAPIView):
 
         request_data = DateRangeSerializer(request.GET).data
         expense_sql = """
-                    SELECT  0 as id ,date(docket_date) as `key`,
-                    SUM(total) as `value` from documents 
-                    WHERE created_at BETWEEN %s AND %s                    
-                    GROUP by date(docket_date);
+                    SELECT 0 as id , date(created_at) as `key`, SUM(`payment_received`) as `value` from bills GROUP by date(created_at); 
         """
 
         income_sql = """
-            SELECT 0 as id , date(created_at) as `key`, SUM(total) as `value` from charges GROUP by date(created_at);
+           SELECT 0 as id , date(created_at) as `key`, SUM(`bill_amount`) as `value` from bills GROUP by date(created_at); 
         """
 
-        expense_data = Documents.objects.raw(
-            expense_sql, [request_data["from_date"], request_data["to_date"]]
+        expense_data = Bills.objects.raw(
+            expense_sql
         )
         e_s = self.get_serializer(expense_data, many=True)
 
-        income_data = Documents.objects.raw(income_sql)
+        income_data = Bills.objects.raw(income_sql)
         i_s = self.get_serializer(income_data, many=True)
 
         result = {
