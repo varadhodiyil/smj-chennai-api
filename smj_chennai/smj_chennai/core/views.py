@@ -76,8 +76,7 @@ class ChargesAPI(ListAPIView):
         queryset = Charges.objects.order_by("-created_at").all()
         document_id = self.request.query_params.get("document")
         if document_id is not None:
-            queryset = queryset.filter(
-                document_id=document_id).prefetch_related()
+            queryset = queryset.filter(document_id=document_id).prefetch_related()
         return queryset
 
     def get(self, request, *args, **kwargs):
@@ -129,7 +128,10 @@ class ChargesUpdateAPI(GenericAPIView):
                 result["errors"] = s.errors
             return Response(result)
         except Charges.DoesNotExist:
-            return Response({"status": False, "message": "Not found"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"status": False, "message": "Not found"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class PartyAPI(GenericAPIView):
@@ -216,4 +218,7 @@ class BillsUpdateAPI(GenericAPIView):
                 _status = status.HTTP_400_BAD_REQUEST
             return Response(result, status=_status)
         except Bills.DoesNotExist:
-            return Response({"status": False, "message": "Not found"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"status": False, "message": "Not found"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )

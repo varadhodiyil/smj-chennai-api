@@ -12,3 +12,4 @@ django-cors-headers = "==3.13.0"
 [dev-packages]
 pytest = "*"
 black = "*"
+tzdata=  "==2022.5"

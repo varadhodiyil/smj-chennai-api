@@ -61,9 +61,7 @@ class SummaryApi(GenericAPIView):
            SELECT 0 as id , date(created_at) as `key`, SUM(`bill_amount`) as `value` from bills GROUP by date(created_at); 
         """
 
-        expense_data = Bills.objects.raw(
-            expense_sql
-        )
+        expense_data = Bills.objects.raw(expense_sql)
         e_s = self.get_serializer(expense_data, many=True)
 
         income_data = Bills.objects.raw(income_sql)
