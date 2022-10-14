@@ -54,17 +54,21 @@ class SummaryApi(GenericAPIView):
 
         request_data = DateRangeSerializer(request.GET).data
         expense_sql = """
-                    SELECT 0 as id , date(created_at) as `key`, SUM(`payment_received`) as `value` from bills GROUP by date(created_at); 
+                    SELECT 0 as id , date(created_at) as `key`, SUM(`payment_received`) as `value` from bills 
+                    WHERE payment_received_at BETWEEN %s AND %s GROUP by date(created_at) ; 
         """
 
         income_sql = """
-           SELECT 0 as id , date(created_at) as `key`, SUM(`bill_amount`) as `value` from bills GROUP by date(created_at); 
+           SELECT 0 as id , date(created_at) as `key`, SUM(`bill_amount`) as `value` from bills 
+           WHERE payment_received_at BETWEEN %s AND %s GROUP by date(created_at); 
         """
 
-        expense_data = Bills.objects.raw(expense_sql)
+        expense_data = Bills.objects.raw(
+            expense_sql, (request_data['from_date'], request_data['to_date']))
         e_s = self.get_serializer(expense_data, many=True)
 
-        income_data = Bills.objects.raw(income_sql)
+        income_data = Bills.objects.raw(
+            income_sql, (request_data['from_date'], request_data['to_date']))
         i_s = self.get_serializer(income_data, many=True)
 
         result = {
