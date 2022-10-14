@@ -24,7 +24,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip pipenv
-        pipenv install --deploy
+        pipenv install --system --deploy
     - name: Run Tests
       run: |
         cd smj_chennai && python manage.py test
