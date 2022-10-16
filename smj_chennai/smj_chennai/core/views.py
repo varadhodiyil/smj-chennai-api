@@ -11,6 +11,7 @@ from smj_chennai.core.serializers import (
     DocumentsSerializer,
     PartySerializer,
 )
+from smj_chennai.dashboard.serializers import DateRangeSerializer
 
 
 class DocumentsAPI(ListAPIView):
@@ -76,7 +77,8 @@ class ChargesAPI(ListAPIView):
         queryset = Charges.objects.order_by("-created_at").all()
         document_id = self.request.query_params.get("document")
         if document_id is not None:
-            queryset = queryset.filter(document_id=document_id).prefetch_related()
+            queryset = queryset.filter(
+                document_id=document_id).prefetch_related()
         return queryset
 
     def get(self, request, *args, **kwargs):
@@ -158,21 +160,22 @@ class BillsAPI(GenericAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        now = datetime.now()
-
+        req = DateRangeSerializer(data=self.request.GET)
+        req.is_valid()
         return Bills.objects.filter(
-            payment_received_at__month=now.month, payment_received_at__year=now.year
+            payment_received_at__range=[
+                req.from_date_dt(), req.to_date_dt()]
         ).order_by("-created_at")
 
     def get(self, request, *args, **kwargs):
         data = self.get_queryset()
         self.paginate_queryset(data)
+
         s = self.get_serializer(data, many=True)
         return self.get_paginated_response(s.data)
 
     def post(self, request: Dict):
 
-        data = request.data
         s = self.get_serializer(data=request.data)
         result = {}
         if s.is_valid():

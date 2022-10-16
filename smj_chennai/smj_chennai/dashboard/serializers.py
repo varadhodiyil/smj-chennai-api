@@ -16,6 +16,12 @@ def from_date(days=30):
 
 
 class DateRangeSerializer(serializers.Serializer):
+    def from_date_dt(self):
+        return self.validated_data['from_date'].date()
+
+    def to_date_dt(self):
+        return self.validated_data['to_date'].date()
+
     from_date = serializers.DateTimeField(default=from_date())
 
     to_date = serializers.DateTimeField(default=datetime.now())
